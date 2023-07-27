@@ -1,1 +1,1 @@
-i was told to make a readme file so here we are
+I was told to make a README.md file so here we are.
