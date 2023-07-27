@@ -1,9 +1,11 @@
-#ifndef DISTORT_GLSL
+float getDistortFactor(in vec2 pos){
+	return length(pos) + 0.1;
+}
 
-	vec2 distortPosition(in vec2 position) {
-		float centerDistance = length(position);
-		float distortionFactor = mix(1.0, centerDistance, 0.9);
-		return position / distortionFactor;
-	}
+vec3 distort(in vec3 pos, in float factor){
+	return vec3(pos.xy / factor, pos.z * 0.2);
+}
 
-#endif
+vec3 distort(in vec3 pos){
+	return distort(pos, getDistortFactor(pos.xy));
+}

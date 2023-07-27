@@ -13,7 +13,7 @@
         texCoord = gl_MultiTexCoord0.xy;
         color = gl_Color;
         gl_Position = ftransform();
-        gl_Position.xy = distortPosition(gl_Position.xy);
+        gl_Position.xyz = distort(gl_Position.xyz);
     }
 
 #endif

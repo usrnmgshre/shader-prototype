@@ -105,7 +105,7 @@
 		vec3 view = viewW.xyz / viewW.w;
 		vec4 world = gbufferModelViewInverse * vec4(view, 1.0);
 		vec4 shadowSpace = shadowProjection * shadowModelView * world;
-		shadowSpace.xy = distortPosition(shadowSpace.xy);
+		shadowSpace.xyz = distort(shadowSpace.xyz);
 		vec3 sampleCoords = shadowSpace.xyz * 0.5 + 0.5;
 		vec3 shadowAccum = vec3(0.0);
 		float randomAngle = texture2D(noisetex, texCoord * 20.0).r * 100.0;
