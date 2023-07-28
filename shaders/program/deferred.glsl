@@ -85,33 +85,16 @@
 	    return lightmapLighting;
     }
 
-	uniform float dayCycle;
-	uniform float twilightPhase;
-
-	#ifdef WORLD_LIGHT
-		uniform mat4 shadowModelView;
-		
-		#define SHD_MAPPING
-		
-		uniform mat4 shadowProjection;
-
-		#include "/lib/lighting/shdMapping.glsl"
-		#include "/lib/lighting/shdDistort.glsl"
-	#endif
-
-	#include "/lib/lighting/simpleShading.glsl"
-
     void main() {
-	    vec4 albedo = vec4(vertexColor, 1);
-
-		albedo.rgb = vec3(1);
-
-		albedo.rgb = toLinear(albedo.rgb);
-
-		vec4 sceneCol = simpleShading(albedo);
-
+	    vec3 albedo = pow(texture2D(colortex0, texCoord).rgb, vec3(2.2));
+		vec3 normal = normalize(texture2D(colortex1, texCoord).rgb * 2.0 - 1.0);
+		vec2 lightmap = texture2D(colortex2, texCoord).rg;
+		vec3 lightmapColor = getLightmapColor(lightmap);
+		float ndotL = max(dot(normal, normalize(sunPosition)), 0.0);
+		vec3 diffuse = albedo * (lightmapColor + ndotL + ambient);
+		
 		/* DRAWBUFFERS:0 */
-		gl_FragData[0] = sceneCol;
+		gl_FragData[0] = vec4(diffuse, 1.0);
     }
 
 #endif
