@@ -4,6 +4,8 @@
     
     varying vec2 texCoord;
 
+	flat out vec3 vertexColor;
+
 	out vec4 vertexPos;
 
 	uniform mat4 gbufferModelView;
@@ -13,6 +15,8 @@
 
     void main() {
         texCoord = gl_MultiTexCoord0.xy;
+
+		vertexColor = gl_Color.rgb;
 
 		vertexPos = gbufferModelViewInverse * (gl_ModelViewMatrix * gl_Vertex);
 
@@ -28,6 +32,8 @@
 #ifdef FRAGMENT
 
     varying vec2 texCoord;
+
+	flat in vec3 vertexColor;
 
 	in vec4 vertexPos;
 
@@ -79,6 +85,9 @@
 	    return lightmapLighting;
     }
 
+	uniform float dayCycle;
+	uniform float twilightPhase;
+
 	#ifdef WORLD_LIGHT
 		uniform mat4 shadowModelView;
 		
@@ -93,21 +102,16 @@
 	#include "/lib/lighting/simpleShading.glsl"
 
     void main() {
-	    vec3 albedo = pow(texture2D(colortex0, texCoord).rgb, vec3(2.2));
-		float depth = texture2D(depthtex0, texCoord).r;
-		if(depth == 1.0) {
-			gl_FragData[0] = vec4(albedo, 1.0);
-			return;
-		}
-		vec3 normal = normalize(texture2D(colortex1, texCoord).rgb * 2.0 - 1.0);
-		vec2 lightmap = texture2D(colortex2, texCoord).rg;
-		vec3 lightmapColor = getLightmapColor(lightmap);
-		float ndotL = max(dot(normal, normalize(sunPosition)), 0.0);
-		vec3 diffuse = albedo * (lightmapColor + ndotL + ambient);
-		vec4 sceneCol = simpleShading(albedo, 1.0);
+	    vec4 albedo = vec4(vertexColor, 1);
+
+		albedo.rgb = vec3(1);
+
+		albedo.rgb = toLinear(albedo.rgb);
+
+		vec4 sceneCol = simpleShading(albedo);
 
 		/* DRAWBUFFERS:0 */
-		gl_FragData[0] = simpleShading;
+		gl_FragData[0] = sceneCol;
     }
 
 #endif
