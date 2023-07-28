@@ -1,4 +1,4 @@
-vec4 shading(in vec4 albedo) {
+vec4 simpleShading(in vec4 albedo) {
 
     vec3 totalDiffuse = toLinear(SKY_COL_DATA_BLOCK);
 
