@@ -4,22 +4,10 @@
     
     varying vec2 texCoord;
 
-	flat out vec3 vertexColor;
-
-	out vec4 vertexPos;
-
-	uniform mat4 gbufferModelView;
-	uniform mat4 gbufferModelViewInverse;
-
 
 
     void main() {
         texCoord = gl_MultiTexCoord0.xy;
-
-		vertexColor = gl_Color.rgb;
-
-		vertexPos = gbufferModelViewInverse * (gl_ModelViewMatrix * gl_Vertex);
-
         gl_Position = ftransform();
     }
 
@@ -33,13 +21,9 @@
 
     varying vec2 texCoord;
 
-	flat in vec3 vertexColor;
-
-	in vec4 vertexPos;
-
     uniform vec3 sunPosition;
 
-	uniform vec3 gbufferModelViewInverse;
+	uniform mat4 gbufferModelViewInverse;
 
     uniform sampler2D colortex0;
     uniform sampler2D colortex1;
@@ -87,13 +71,15 @@
 	    return lightmapLighting;
     }
 
+
+
     void main() {
 	    vec3 albedo = pow(texture2D(colortex0, texCoord).rgb, vec3(2.2));
 		vec3 normal = normalize(texture2D(colortex1, texCoord).rgb * 2.0 - 1.0);
 		vec2 lightmap = texture2D(colortex2, texCoord).rg;
 		vec3 lightmapColor = getLightmapColor(lightmap);
-		vec3 bruh = mat3(gbufferModelViewInverse) * sunPosition;
-		float ndotL = max(dot(normal, bruh), 0.0);
+		vec3 lightPos = mat3(gbufferModelViewInverse) * sunPosition;
+		float ndotL = max(dot(normal, lightPos * 0.01), 0.0);
 		vec3 diffuse = albedo * (lightmapColor + ndotL + ambient);
 
 		/* DRAWBUFFERS:0 */
