@@ -18,7 +18,7 @@
         texCoord = gl_MultiTexCoord0.xy;
         lmCoord = mat2(gl_TextureMatrix[1]) * gl_MultiTexCoord1.xy;
         lmCoord = (lmCoord * 33.05 / 32.0) - (1.05 / 32.0);
-        normal = gl_NormalMatrix * gl_Normal;
+        normal = mat3(gbufferModelViewInverse) * gl_NormalMatrix * gl_Normal;
 	    vertexColor = gl_Color.rgb;
         vertexPos = gbufferModelViewInverse * (gl_ModelViewMatrix * gl_Vertex);        
 	    gl_Position = ftransform();

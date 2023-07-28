@@ -39,6 +39,8 @@
 
     uniform vec3 sunPosition;
 
+	uniform vec3 gbufferModelViewInverse;
+
     uniform sampler2D colortex0;
     uniform sampler2D colortex1;
     uniform sampler2D colortex2;
@@ -90,9 +92,10 @@
 		vec3 normal = normalize(texture2D(colortex1, texCoord).rgb * 2.0 - 1.0);
 		vec2 lightmap = texture2D(colortex2, texCoord).rg;
 		vec3 lightmapColor = getLightmapColor(lightmap);
-		float ndotL = max(dot(normal, normalize(sunPosition)), 0.0);
+		vec3 bruh = mat3(gbufferModelViewInverse) * sunPosition;
+		float ndotL = max(dot(normal, bruh), 0.0);
 		vec3 diffuse = albedo * (lightmapColor + ndotL + ambient);
-		
+
 		/* DRAWBUFFERS:0 */
 		gl_FragData[0] = vec4(diffuse, 1.0);
     }
