@@ -79,14 +79,16 @@
 	    return lightmapLighting;
     }
 
-	#define WORLD_LIGHT
-	#define SHD_MAPPING
+	#ifdef WORLD_LIGHT
+		uniform mat4 shadowModelView;
+		
+		#define SHD_MAPPING
+		
+		uniform mat4 shadowProjection;
 
-	uniform mat4 shadowModelView;
-	uniform mat4 shadowProjection;
-
-	#include "/lib/lighting/shdMapping.glsl"
-	#include "/lib/lighting/shdDistort.glsl"
+		#include "/lib/lighting/shdMapping.glsl"
+		#include "/lib/lighting/shdDistort.glsl"
+	#endif
 
 	#include "/lib/lighting/simpleShading.glsl"
 

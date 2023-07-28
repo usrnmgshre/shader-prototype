@@ -30,13 +30,13 @@
     varying vec3 normal;
     varying vec4 color;
 
+    uniform sampler2D colortex0;
     uniform sampler2D lightmap;
-    uniform sampler2D texture;
-
+    
 
 
     void main() {
-        vec4 albedo = texture2D(texture, texCoord) * color;
+        vec4 albedo = texture2D(colortex0, texCoord) * color;
         albedo *= texture2D(lightmap, lmCoord);
 
         /* DRAWBUFFERS:012 */

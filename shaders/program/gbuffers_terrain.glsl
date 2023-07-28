@@ -31,12 +31,12 @@
     varying vec3 normal;
     varying vec4 color;
 
-    uniform sampler2D texture;
+    uniform sampler2D colortex0;
 
 
 
     void main() {
-        vec4 albedo = texture2D(texture, texCoord) * color;
+        vec4 albedo = texture2D(colortex0, texCoord) * color;
 
         /* DRAWBUFFERS:012 */
         gl_FragData[0] = albedo;
