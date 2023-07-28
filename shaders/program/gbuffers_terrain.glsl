@@ -7,7 +7,7 @@
     varying vec3 normal;
     varying vec4 color;
 
-    flat out vec3 vertexColor;   
+    flat out vec4 vertexColor;   
 
     out vec4 vertexPos;
 
@@ -19,7 +19,7 @@
         lmCoord = mat2(gl_TextureMatrix[1]) * gl_MultiTexCoord1.xy;
         lmCoord = (lmCoord * 33.05 / 32.0) - (1.05 / 32.0);
         normal = mat3(gbufferModelViewInverse) * gl_NormalMatrix * gl_Normal;
-	    vertexColor = gl_Color.rgb;
+	    vertexColor = gl_Color;
         vertexPos = gbufferModelViewInverse * (gl_ModelViewMatrix * gl_Vertex);        
 	    gl_Position = ftransform();
     }
@@ -37,7 +37,7 @@
     varying vec3 normal;
     varying vec4 color;
 
-    flat in vec3 vertexColor;
+    flat in vec4 vertexColor;
 
     in vec4 vertexPos;
 
@@ -60,9 +60,9 @@
     #include "/lib/lighting/simpleShading.glsl"
 
     void main() {
-        vec4 albedo = vec4(vertexColor, 1);
+        vec4 albedo = textureLod(colortex0, texCoord, 0) * vertexColor;
 
-        albedo.rgb = vec3(1);
+        albedo.rgb = vertexColor.rgb;
 
 		albedo.rgb = toLinear(albedo.rgb);
 
